@@ -1,0 +1,13 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-NGP.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\User\Source\Repos\NGP\NGPAssignment\NGP\Intermediate\Build\Win64\x64\NGPEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"D:\User\Source\Repos\NGP\NGPAssignment\NGP\Intermediate\Build\Win64\x64\UnrealEditor\Development\NGP\NGP.cpp.obj"
+"D:\User\Source\Repos\NGP\NGPAssignment\NGP\Intermediate\Build\Win64\x64\UnrealEditor\Development\NGP\PerModuleInline.gen.cpp.obj"
+"D:\User\Source\Repos\NGP\NGPAssignment\NGP\Intermediate\Build\Win64\x64\UnrealEditor\Development\NGP\Default.rc2.res"
+/OUT:"D:\User\Source\Repos\NGP\NGPAssignment\NGP\Intermediate\Build\Win64\x64\UnrealEditor\Development\NGP\UnrealEditor-NGP.lib"

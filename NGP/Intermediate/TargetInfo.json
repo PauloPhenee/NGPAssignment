@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "NGP",
+			"Path": "..\\Source\\NGP.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "NGPEditor",
+			"Path": "..\\Source\\NGPEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
