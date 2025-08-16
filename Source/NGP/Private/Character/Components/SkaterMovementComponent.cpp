@@ -15,20 +15,21 @@ void USkaterMovementComponent::SetSteerAxis(float Axis)
 	_steerAxis = Axis;
 }
 
+//movement override so we can have just a forward movement
 void USkaterMovementComponent::CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration)
 {
 	const float TargetSpeed = MaxSkatingSpeed * _pressedInput;
 
-	CurrentForwardSpeed = FMath::Clamp(CurrentForwardSpeed, 0.f, MaxSkatingSpeed);
+	_currentForwardSpeed = FMath::Clamp(_currentForwardSpeed, 0.f, MaxSkatingSpeed);
 
-	const bool bAccelPhase = TargetSpeed > CurrentForwardSpeed;
+	const bool bAccelPhase = TargetSpeed > _currentForwardSpeed;
 	const float Rate = bAccelPhase ? SkateAcceleration : SkateDeceleration;
 	const float Step = Rate * DeltaTime * (bAccelPhase ? +1.f : -1.f);
 
 	if (bAccelPhase)
-		CurrentForwardSpeed = FMath::Min(CurrentForwardSpeed + Step, TargetSpeed);
+		_currentForwardSpeed = FMath::Min(_currentForwardSpeed + Step, TargetSpeed);
 	else
-		CurrentForwardSpeed = FMath::Max(CurrentForwardSpeed + Step, TargetSpeed);
+		_currentForwardSpeed = FMath::Max(_currentForwardSpeed + Step, TargetSpeed);
 
 	FVector Fwd = CharacterOwner ? CharacterOwner->GetActorForwardVector() : FVector::ForwardVector;
 
@@ -40,15 +41,16 @@ void USkaterMovementComponent::CalcVelocity(float DeltaTime, float Friction, boo
 	}
 
 	const float OldZ = Velocity.Z;
-	Velocity = Fwd * CurrentForwardSpeed;
+	Velocity = Fwd * _currentForwardSpeed;
 	Velocity.Z = OldZ;
 }
+
 
 void USkaterMovementComponent::OnMovementUpdated(float DeltaTime, const FVector& OldLocation, const FVector& OldVelocity)
 {
 	Super::OnMovementUpdated(DeltaTime, OldLocation, OldVelocity);
 	Tick_Steer(DeltaTime);
-	Tick_Speed(DeltaTime, OldLocation);
+	CollisionSpeedMod(DeltaTime, OldLocation);
 
 	if (IsFalling() && Velocity.Z <= 0.f)
 	{
@@ -80,7 +82,8 @@ void USkaterMovementComponent::Tick_Steer(float DeltaTime)
 
 }
 
-void USkaterMovementComponent::Tick_Speed(float DeltaTime, FVector OldLocation)
+//If colliiding, set speed to 0 to avoid slingshot
+void USkaterMovementComponent::CollisionSpeedMod(float DeltaTime, FVector OldLocation)
 {
 	const FVector NewLocation = CharacterOwner->GetActorLocation();
 	const FVector Delta = NewLocation - OldLocation;
@@ -100,23 +103,7 @@ void USkaterMovementComponent::Tick_Speed(float DeltaTime, FVector OldLocation)
 	{
 		if (ForwardSpeedMeasured <= 1.0f)
 		{
-			CurrentForwardSpeed = 0.f;
+			_currentForwardSpeed = 0.f;
 		}
-	}
-}
-
-void USkaterMovementComponent::Tick_Move(float DeltaTime)
-{
-	if (Velocity.IsNearlyZero())
-		return;
-
-	FVector Delta = Velocity * DeltaTime;
-
-	FHitResult Hit;
-	SafeMoveUpdatedComponent(Delta, UpdatedComponent->GetComponentQuat(), true, Hit);
-
-	if (Hit.IsValidBlockingHit())
-	{
-		SlideAlongSurface(Delta, 1.f - Hit.Time, Hit.Normal, Hit, true);
 	}
 }

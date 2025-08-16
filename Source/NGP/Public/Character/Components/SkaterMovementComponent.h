@@ -17,6 +17,7 @@ class NGP_API USkaterMovementComponent : public UCharacterMovementComponent
 
 public:
 
+	//variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skate|Speed")
 	float MaxSkatingSpeed = 2000.f;
 
@@ -29,14 +30,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skate|Steer")
 	float TurnRate = 180.f;
 
+	//events
 	UPROPERTY(BlueprintAssignable, Category = "Skate|Events")
 	FOnSkateFalling OnStartedFalling;
 
 	UPROPERTY(BlueprintAssignable, Category = "Skate|Events")
 	FOnSkateJumping OnSkateJumping;
 
-	float CurrentForwardSpeed = 0.f;
-
+	//functions
 	UFUNCTION(BlueprintCallable, Category = "Skate|Input")
 	void SetPressedInput(float Value);
 
@@ -52,12 +53,15 @@ public:
 
 protected:
 
+	//variables
+	float _currentForwardSpeed = 0.f;
+
 	float _pressedInput = 0.0;
 
-	//(left/right)
+	//(-1 left/ 1 right)
 	float _steerAxis = 0.f;
 
+	//functions
 	void Tick_Steer(float DeltaTime);
-	void Tick_Speed(float DeltaTime, FVector OldLocation);
-	void Tick_Move(float DeltaTime);
+	void CollisionSpeedMod(float DeltaTime, FVector OldLocation);
 };

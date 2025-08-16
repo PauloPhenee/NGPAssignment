@@ -6,11 +6,13 @@
 #include "GameFramework/Character.h"
 #include "Character/Controllers/SkaterAnimInstance.h"
 #include "Character/Components/SkaterMovementComponent.h"
+#include "Controllers/ScoringInterface.h"
+#include "Controllers/SkaterPlayerState.h"
 #include "SkaterCharacter.generated.h"
 
 
 UCLASS()
-class NGP_API ASkaterCharacter : public ACharacter
+class NGP_API ASkaterCharacter : public ACharacter, public IScoringInterface
 {
 	GENERATED_BODY()
 
@@ -21,12 +23,15 @@ public:
 	UFUNCTION()
 	void OnStartFalling(ACharacter* Character);
 
-protected:
+	void OnScored_Implementation(int32 Points);
 
+protected:
+	//refs for easier access
 	USkaterMovementComponent* SkaterMC = nullptr;
 
 	USkaterAnimInstance* AnimInstance = nullptr;
 
-	virtual void BeginPlay() override;
+	ASkaterPlayerState* PlayerState = nullptr;
 
+	virtual void BeginPlay() override;
 };

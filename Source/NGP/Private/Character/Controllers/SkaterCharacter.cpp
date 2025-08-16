@@ -8,16 +8,12 @@ void ASkaterCharacter::OnJump(ACharacter* Character)
 {
 	if (Character != this) return;
 	AnimInstance->bIsJumping = true;
-	UE_LOG(LogTemp, Log, TEXT("[%s] Jumping"), *FDateTime::Now().ToString(TEXT("%H:%M:%S.%s")));
-
 }
 
 void ASkaterCharacter::OnStartFalling(ACharacter* Character)
 {
 	if (Character != this) return;
 	AnimInstance->bIsJumping = false;
-	UE_LOG(LogTemp, Log, TEXT("[%s] Falling"), *FDateTime::Now().ToString(TEXT("%H:%M:%S.%s")));
-
 }
 
 void ASkaterCharacter::BeginPlay()
@@ -27,7 +23,12 @@ void ASkaterCharacter::BeginPlay()
 	SkaterMC = Cast<USkaterMovementComponent>(GetCharacterMovement());
 	SkaterMC->OnStartedFalling.AddDynamic(this, &ASkaterCharacter::OnStartFalling);
 	SkaterMC->OnSkateJumping.AddDynamic(this, &ASkaterCharacter::OnJump);
+	PlayerState = GetPlayerState<ASkaterPlayerState>();
+}
 
+void ASkaterCharacter::OnScored_Implementation(int32 Points)
+{
+	PlayerState->AddScore(Points);
 }
 
 

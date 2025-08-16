@@ -14,5 +14,4 @@ class NGP_API USkaterAnimInstance : public UAnimInstance
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anim")
 	bool bIsJumping = false;
-
 };

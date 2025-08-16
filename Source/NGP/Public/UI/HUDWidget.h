@@ -6,12 +6,21 @@
 #include "Blueprint/UserWidget.h"
 #include "HUDWidget.generated.h"
 
-/**
- * 
- */
+class UTextBlock;
+
 UCLASS()
 class NGP_API UHUDWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void NativeConstruct() override;
+
+protected:
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ScoreText;
+
+	UFUNCTION()
+	void HandleScoreChanged(int32 NewScore);
 };
